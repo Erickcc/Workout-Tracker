@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workouttrackerd
   useFindAndModify: false
 });
 
-// routes
+// Adds the home and api routes
 app.use(routes);
 
 app.listen(PORT, () => {

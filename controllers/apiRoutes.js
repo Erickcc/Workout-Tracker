@@ -1,7 +1,9 @@
 const router = require("express").Router();
+// Import workout model
 const Workout = require("../models/Workout.js");
 
 // for getlastworkout function
+// Gets the newest workout, gets called once you join the home page
 router.get("/workouts", ({ body }, res) => {
   Workout.find({})
     .sort({ day: -1 })
@@ -26,6 +28,7 @@ router.post("/workouts", ({ body }, res) => {
 });
 
 // for addExercise function, updates by id
+// Adds a new exercise to an existing workout
 router.put("/workouts/:id", (req, res) => {
   Workout.findByIdAndUpdate(req.params.id, { $push: { exercises: req.body } })
     .then((dbWorkout) => {
@@ -37,6 +40,7 @@ router.put("/workouts/:id", (req, res) => {
 });
 
 // for getWorkoutsInRange function, gets all workouts (limit to the last 7)
+// Get the sum of the duration and weight of each exercise
 router.get("/workouts/range", (req, res) => {
   Workout.aggregate([
     {
