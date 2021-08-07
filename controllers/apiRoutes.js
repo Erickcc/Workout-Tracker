@@ -5,9 +5,15 @@ const Workout = require("../models/Workout.js");
 // for getlastworkout function
 // Gets the newest workout, gets called once you join the home page
 router.get("/workouts", ({ body }, res) => {
-  Workout.find({})
+  Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: { $sum: "$exercises.duration" },
+      },
+    },
+  ])
     .sort({ day: -1 })
-    .limit(2)
+    .limit(1)
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
@@ -18,13 +24,17 @@ router.get("/workouts", ({ body }, res) => {
 
 // for createWorkout function, creates new workout
 router.post("/workouts", ({ body }, res) => {
-  Workout.create(body)
+  const today = new Date();
+  // console.log(body);
+  // if (body.length){
+  Workout.create({ day: today, exercise: body })
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
     .catch((err) => {
       res.status(400).json(err);
     });
+  // }
 });
 
 // for addExercise function, updates by id
@@ -53,7 +63,7 @@ router.get("/workouts/range", (req, res) => {
     .sort({ day: -1 })
     .limit(7)
     .then((dbWorkout) => {
-      console.log(dbWorkout);
+      // console.log(dbWorkout);
       res.json(dbWorkout);
     })
     .catch((err) => {
