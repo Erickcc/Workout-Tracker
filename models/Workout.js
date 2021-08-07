@@ -7,7 +7,7 @@ const workoutSchema = new Schema({
   day: {
     type: Date,
   },
-  excercises: [
+  exercises: [
     {
       type: {
         type: String,
